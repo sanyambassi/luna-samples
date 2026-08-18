@@ -14,5 +14,6 @@
 | CKM_EC_EDWARDS_KEY_PAIR_GEN_demo.c | demonstrates how to generate EDDSA keypair. |
 | MultiThread_KeyGen_demo.c | demonstrates how to generate AES, RSA, ECDSA or EDDSA keys in bulk using multiple threads. |
 | SLIP10_Derive_demo.c | demonstrates SLIP-10 key derivation using CKM_BIP32_MASTER_DERIVE and CKM_BIP32_CHILD_DERIVE. An optional seed label keeps the seed on the token, so a later run rebuilds the identical tree. |
+| SLIP10_Bulk_Master_demo.c | derives SLIP-10 master keypairs in bulk, one seed and one master per thread. An optional seed label prefix keeps those seeds on the token as `<prefix>-0`, `<prefix>-1`, … so a later run rebuilds the same masters. |
 
 For help with compiling and executing the code, please refer to the HOW_TO guide provided here : [HOW_TO](/C_Samples/HOW_TO.md).
