@@ -90,6 +90,14 @@ CKM_EC_EDWARDS_KEY_PAIR_GEN_demo: generating_keys/CKM_EC_EDWARDS_KEY_PAIR_GEN_de
 	@mkdir -p bin/keygen
 	 @$(CC) -DOS_UNIX ${LINKFLAGS} -I$(INCLUDES) -o bin/keygen/CKM_EC_EDWARDS_KEY_PAIR_GEN_demo generating_keys/CKM_EC_EDWARDS_KEY_PAIR_GEN_demo.c
 
+MultiThread_KeyGen_demo: generating_keys/MultiThread_KeyGen_demo.c
+	@mkdir -p bin/keygen
+	@$(CC) -DOS_UNIX ${LINKFLAGS} -lpthread -I$(INCLUDES) -o bin/keygen/MultiThread_KeyGen_demo generating_keys/MultiThread_KeyGen_demo.c
+
+SLIP10_Derive_demo: generating_keys/SLIP10_Derive_demo.c
+	@mkdir -p bin/keygen
+	@$(CC) -DOS_UNIX ${LINKFLAGS} -lpthread -I$(INCLUDES) -o bin/keygen/SLIP10_Derive_demo generating_keys/SLIP10_Derive_demo.c
+
 
 
 # Samples to demonstrate various signing mechanisms.
@@ -310,7 +318,7 @@ CKM_SHA256_RSA_PKCS_demo
 keygen: CKM_AES_KEY_GEN_demo CKM_DES3_KEY_GEN_demo CKM_ECDH1_DERIVE_demo \
 CKM_EC_KEY_PAIR_GEN_demo CKM_NIST_PRF_KDF_demo CKM_PKCS5_PBKD2_demo \
 CKM_RSA_FIPS_186_3_PRIME_KEY_PAIR_GEN_demo CKM_RSA_PKCS_KEY_PAIR_GEN_demo CKM_SHA256_KEY_DERIVATION_demo \
-CKM_EC_EDWARDS_KEY_PAIR_GEN_demo
+CKM_EC_EDWARDS_KEY_PAIR_GEN_demo MultiThread_KeyGen_demo SLIP10_Derive_demo
 	@echo " - Key generation samples have build successfully. Executables are inside bin/keygen directory."
 
 
@@ -380,6 +388,8 @@ list_samples:
 	@echo "- CKM_RSA_PKCS_KEY_PAIR_GEN_demo"
 	@echo "- CKM_SHA256_KEY_DERIVATION_demo"
 	@echo "- CKM_EC_EDWARDS_KEY_PAIR_GEN_demo"
+	@echo "- MultiThread_KeyGen_demo"
+	@echo "- SLIP10_Derive_demo"
 	@echo
 	@echo "[ MESSAGE DIGEST ]"
 	@echo "- CKM_SHA256_demo"
