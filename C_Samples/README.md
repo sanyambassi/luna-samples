@@ -7,7 +7,7 @@
 | --- | --- | --- |
 | signing | samples that shows how to perform signing and signature verification. | 7 |
 | hashing | samples to demonstrate how to compute message digest. | 3 |
-| generating_keys | samples to demonstrates how to generate different types of cryptographic keys. | 12 |
+| generating_keys | samples to demonstrates how to generate different types of cryptographic keys. | 13 |
 | encryption | samples to demonstrate how to perform encryption | 8 |
 | object_management | samples to demonstrate how to manage keys | 10 |
 | sfnt_extension | samples demonstrating various SafeNet function (Vendor Defined Functions). | 4 |
