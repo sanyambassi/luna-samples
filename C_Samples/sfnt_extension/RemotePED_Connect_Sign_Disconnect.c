@@ -299,8 +299,8 @@ int main(int argc, char **argv[])
 	pedId = atoi((const char*)argv[2]);
 
 	size_t len = strlen((const char*)argv[3]);
-	slotPin = (CK_BYTE*)malloc(len);
-	strncpy(slotPin, (const char*)argv[3], len);
+	slotPin = (CK_BYTE*)malloc(len + 1);
+	strcpy((char*)slotPin, (const char*)argv[3]);
 
 	loadLunaLibrary();
 	checkRPVStatus();

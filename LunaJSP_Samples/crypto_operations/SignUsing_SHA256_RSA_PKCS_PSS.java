@@ -25,7 +25,7 @@ import java.security.Signature;
 import com.safenetinc.luna.LunaSlotManager;
 import com.safenetinc.luna.exception.*;
 
-public class SignUsing_SHA256_RSA_PSS {
+public class SignUsing_SHA256_RSA_PKCS_PSS {
 
 	private static LunaSlotManager slotManager = null;
 	private static String slotPassword = null;

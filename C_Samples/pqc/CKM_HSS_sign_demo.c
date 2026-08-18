@@ -283,9 +283,9 @@ void writeSignature()
 	size_t fileNameLen = strlen(fileName);
 	size_t extLen = 4;
 
-	signatureFileName = (char*)malloc(fileNameLen + 3);
-	strncpy(signatureFileName, fileName, fileNameLen);
-	strncat(signatureFileName, ".sig", extLen);
+	signatureFileName = (char*)malloc(fileNameLen + extLen + 1);
+	strcpy(signatureFileName, (const char*)fileName);
+	strcat(signatureFileName, ".sig");
 	printf("\n> Signature written to file : %s.\n", signatureFileName);
 
 	sigWrite = fopen(signatureFileName, "wb");
@@ -311,11 +311,11 @@ int main(int argc, char **argv[])
 		exit(1);
 	}
 	slotId = atoi((const char*)argv[1]);
-	slotPin = (CK_BYTE*)malloc(strlen((const char*)argv[2]));
-	strncpy(slotPin, (const char*)argv[2], strlen((const char*)argv[2]));
+	slotPin = (CK_BYTE*)malloc(strlen((const char*)argv[2]) + 1);
+	strcpy((char*)slotPin, (const char*)argv[2]);
 
-	fileName = (CK_BYTE*)malloc(strlen((const char*)argv[3]));
-	strncpy(fileName, (const char*)argv[3], strlen((const char*)argv[3]));
+	fileName = (CK_BYTE*)malloc(strlen((const char*)argv[3]) + 1);
+	strcpy((char*)fileName, (const char*)argv[3]);
 
 	readFile();
 	loadLunaLibrary();

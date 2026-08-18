@@ -176,17 +176,15 @@ CK_KEY_TYPE inputKeyLabel()
         printf("\n> Enter wrapping key label : ");
         fgets(label, sizeof(label), stdin);
         len = strlen(label);
-        wrappingKeyLabel = (CK_UTF8CHAR*)malloc(len);
-        strncpy(wrappingKeyLabel, label, len);
-        wrappingKeyLabel[len] = '\0';
+        wrappingKeyLabel = (CK_UTF8CHAR*)malloc(len + 1);
+        strcpy((char*)wrappingKeyLabel, label);
 
 
 	printf("\n> Enter private key label : ");
 	fgets(label, sizeof(label), stdin);
 	len = strlen(label);
-	privKeyLabel = (CK_UTF8CHAR*)malloc(len);
-	strncpy(privKeyLabel, label, len);
-	privKeyLabel[len] = '\0';
+	privKeyLabel = (CK_UTF8CHAR*)malloc(len + 1);
+	strcpy((char*)privKeyLabel, label);
 
 
 	printf("\n> Key to search for : \n");
@@ -308,10 +306,11 @@ void writeWrappedKey(CK_ULONG encKeyLen)
 	int extensionLen = 4;
 
 	// uses the private key label as the filename and appends .bin as the file extension.
-	len = strlen(privKeyLabel)-1;
-	fileName = (char*)malloc(len + extensionLen);
-	strncpy(fileName, privKeyLabel, len);
-	strncat(fileName, ".bin", extensionLen);
+	len = strlen((const char*)privKeyLabel)-1;
+	fileName = (char*)malloc(len + extensionLen + 1);
+	memcpy(fileName, privKeyLabel, len);
+	fileName[len] = '\0';
+	strcat(fileName, ".bin");
 
 	fileWrite = fopen(fileName, "wb");
 	fwrite(wrappedKey, sizeof(CK_BYTE), encKeyLen, fileWrite);
@@ -330,8 +329,8 @@ int main(int argc, char **argv[])
 		exit(1);
 	}
 	slotId = atoi((const char*)argv[1]);
-	slotPin = (CK_BYTE*)malloc(strlen((const char*)argv[2]));
-	strncpy(slotPin, (char*)argv[2], strlen((const char*)argv[2]));
+	slotPin = (CK_BYTE*)malloc(strlen((const char*)argv[2]) + 1);
+	strcpy((char*)slotPin, (const char*)argv[2]);
 
 	loadLunaLibrary();
 	connectToLunaSlot();

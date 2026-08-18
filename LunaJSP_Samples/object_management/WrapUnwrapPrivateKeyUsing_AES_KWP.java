@@ -28,7 +28,7 @@ import javax.crypto.spec.IvParameterSpec;
 import com.safenetinc.luna.LunaSlotManager;
 import com.safenetinc.luna.exception.*;
 
-public class WrapUnwrapSecretKeyUsing_AES_KW {
+public class WrapUnwrapPrivateKeyUsing_AES_KWP {
 
 	private static String slotPassword = null;
 	private static String slotLabel = null;
@@ -45,11 +45,11 @@ public class WrapUnwrapSecretKeyUsing_AES_KW {
 
 	// Prints the proper syntax to execute this sample.
 	private static void printUsage() {
-		System.out.println(" [ WrapUnwrapSecretKeyUsing_AES_KW ]\n");
+		System.out.println(" [ WrapUnwrapPrivateKeyUsing_AES_KWP ]\n");
 		System.out.println("Usage-");
-		System.out.println("java WrapUnwrapSecretKeyUsing_AES_KW <slot_label> <crypto_officer_password>\n");
+		System.out.println("java WrapUnwrapPrivateKeyUsing_AES_KWP <slot_label> <crypto_officer_password>\n");
 		System.out.println("Example -");
-		System.out.println("java WrapUnwrapSecretKeyUsing_AES_KW myPartition userpin\n");
+		System.out.println("java WrapUnwrapPrivateKeyUsing_AES_KWP myPartition userpin\n");
 	}
 
 

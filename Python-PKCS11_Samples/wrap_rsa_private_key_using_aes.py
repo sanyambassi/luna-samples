@@ -14,9 +14,10 @@
 # - This sample code demonstrate how to wrap an RSA private key using aes-256 key.
 # - The encrypted key bytes will be written to a file.
 # - IMPORTANT NOTE
-#   - This sample uses AES-Key-Wrap-Pad which is declared as a vendor specified mechanism CKM_AES_KWP for Luna HSM.
-#   - Python pkcs11 wrapper has AES-Key-Wrap-Pad declared as CKM_AES_KEY_WRAP_PAD.
-#   - So in order to make AES-Key-Wrap-Pad work, I had to declare CKM_AES_KWP as "AES_KWP = 0x80000171" in python3/lib/python3.12/site-packages/pkcs11/mechanisms.py.
+#   - This sample uses AES-Key-Wrap-With-Padding, which Luna also exposes under the vendor code CKM_AES_KWP (0x80000171).
+#   - The standard PKCS#11 v3.0 name for it is CKM_AES_KEY_WRAP_KWP (0x210b), which python-pkcs11 already declares,
+#     so no edit to site-packages/pkcs11/mechanisms.py is needed.
+#   - Do not confuse it with CKM_AES_KEY_WRAP_PAD (0x210a), the older draft code, which Luna rejects as CKR_MECHANISM_INVALID.
 
 
 import sys
@@ -76,7 +77,7 @@ try:
 			print (key_to_wrap_label, " not found.\n")
 
 		try:
-			wrapped_key_data = wrapping_key.wrap_key(key_to_wrap, mechanism=Mechanism.AES_KWP) # performs key wrapping.
+			wrapped_key_data = wrapping_key.wrap_key(key_to_wrap, mechanism=Mechanism.AES_KEY_WRAP_KWP) # performs key wrapping.
 		except Exception as err:
 			print (f"[ERROR] {type(err).__name__}: {err}")
 

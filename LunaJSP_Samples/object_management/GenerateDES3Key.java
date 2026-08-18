@@ -23,7 +23,7 @@ import javax.crypto.KeyGenerator;
 import com.safenetinc.luna.LunaSlotManager;
 import com.safenetinc.luna.exception.*;
 
-public class GeneratingDES3Key {
+public class GenerateDES3Key {
 	private static LunaSlotManager slotManager = null;
 	private static String slotPassword = null;
 	private static String slotLabel = null;
@@ -33,11 +33,11 @@ public class GeneratingDES3Key {
 
 	// Prints the correct syntax to execute this sample.
 	private static void printUsage() {
-		System.out.println(" [ GeneratingDES3Key ]\n");
+		System.out.println(" [ GenerateDES3Key ]\n");
 		System.out.println("Usage-");
-		System.out.println("java GeneratingDES3Key <slot_label> <crypto_officer_password>\n");
+		System.out.println("java GenerateDES3Key <slot_label> <crypto_officer_password>\n");
 		System.out.println("Example -");
-		System.out.println("java GeneratingDES3Key myPartition userpin\n");
+		System.out.println("java GenerateDES3Key myPartition userpin\n");
 	}
 
 

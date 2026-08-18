@@ -197,9 +197,8 @@ void inputLabels()
         printf("\n> Enter wrapping key label : ");
         fgets(label, sizeof(label), stdin);
         len = strlen(label);
-        wrappingKeyLabel = (CK_UTF8CHAR*)malloc(len);
-        strncpy(wrappingKeyLabel, label, len);
-        wrappingKeyLabel[len] = '\0';
+        wrappingKeyLabel = (CK_UTF8CHAR*)malloc(len + 1);
+        strcpy((char*)wrappingKeyLabel, label);
 
 
 	printf("\n> Type of key to unwrap : \n");
@@ -306,18 +305,19 @@ int main(int argc, char **argv[])
 	slotId = atoi((const char*)argv[1]);
 
 	len = strlen((const char*)argv[2]);
-	slotPin = (CK_BYTE*)malloc(len);
-	strncpy(slotPin, (char*)argv[2], len);
+	slotPin = (CK_BYTE*)malloc(len + 1);
+	strcpy((char*)slotPin, (const char*)argv[2]);
 
 	len = strlen((const char*)argv[3]);
-	wrappedKeyFile = (char*)malloc(len);
-	strncpy(wrappedKeyFile, (char*)argv[3], len);
+	wrappedKeyFile = (char*)malloc(len + 1);
+	strcpy(wrappedKeyFile, (const char*)argv[3]);
 
+	// Drops the ".bin" extension from the filename and appends "-unwrapped".
 	privKeyLabelLen = len + 6;
-	privKeyLabel = (char*)malloc(len + 6);
-	strncpy(privKeyLabel, wrappedKeyFile, len - 4);
-	len = 10;
-	strncat(privKeyLabel, "-unwrapped", len);
+	privKeyLabel = (char*)malloc(privKeyLabelLen + 1);
+	memcpy(privKeyLabel, wrappedKeyFile, len - 4);
+	privKeyLabel[len - 4] = '\0';
+	strcat(privKeyLabel, "-unwrapped");
 
 	loadLunaLibrary();
 	connectToLunaSlot();

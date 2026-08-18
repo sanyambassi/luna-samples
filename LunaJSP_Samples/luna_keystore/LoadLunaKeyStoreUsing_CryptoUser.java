@@ -29,6 +29,7 @@ public class LoadLunaKeyStoreUsing_CryptoUser {
 
 	private static String cryptoUserPassword = null;
 	private static String slotLabel = null;
+	private static final String PROVIDER = "LunaProvider";
 
 	// Prints the correct syntax to execute this sample.
 	private static void printUsage() {

@@ -283,14 +283,14 @@ int main(int argc, char **argv[])
 		exit(1);
 	}
 	slotId = atoi((const char*)argv[1]);
-	slotPin = (CK_BYTE*)malloc(strlen((const char*)argv[2]));
-	strncpy(slotPin, (const char*)argv[2], strlen((const char*)argv[2]));
+	slotPin = (CK_BYTE*)malloc(strlen((const char*)argv[2]) + 1);
+	strcpy((char*)slotPin, (const char*)argv[2]);
 
-	fileName = (CK_BYTE*)malloc(strlen((const char*)argv[3]));
-	strncpy(fileName, (const char*)argv[3], strlen((const char*)argv[3]));
+	fileName = (CK_BYTE*)malloc(strlen((const char*)argv[3]) + 1);
+	strcpy((char*)fileName, (const char*)argv[3]);
 
-	signatureFileName = (CK_BYTE*)malloc(strlen((const char*)argv[4]));
-	strncpy(signatureFileName, (const char*)argv[4], strlen((const char*)argv[4]));
+	signatureFileName = (CK_BYTE*)malloc(strlen((const char*)argv[4]) + 1);
+	strcpy((char*)signatureFileName, (const char*)argv[4]);
 
 	printf("\n> Reading files:\n");
 	readDataFile();

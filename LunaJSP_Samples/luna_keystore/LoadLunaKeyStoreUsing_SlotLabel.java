@@ -29,6 +29,7 @@ public class LoadLunaKeyStoreUsing_SlotLabel {
 
 	private static String slotPassword = null;
 	private static String slotLabel = null;
+	private static final String PROVIDER = "LunaProvider";
 
 	// Prints the correct syntax to execute this sample.
 	private static void printUsage() {

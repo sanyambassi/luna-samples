@@ -88,7 +88,7 @@ public class WrapUnwrapSecretKeyUsing_AES_KW {
 		Cipher unwrap = Cipher.getInstance("AES/KW/NoPadding", PROVIDER);
 		unwrap.init(Cipher.UNWRAP_MODE, wrappingKey, IVSPEC);
 		unwrappedKey = (SecretKey)unwrap.unwrap(wrappedKey, "AES", Cipher.SECRET_KEY);
-		System.out.println("Wrapped key unwrapped.");
+		System.out.println("Wrapped key unwrapped as a " + unwrappedKey.getAlgorithm() + " key.");
 	}
 
 

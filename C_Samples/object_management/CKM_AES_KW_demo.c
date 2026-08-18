@@ -167,8 +167,8 @@ CK_OBJECT_HANDLE generateAESKey(const char *label)
         CK_ULONG keyLen = 32;
 	CK_OBJECT_HANDLE objHandle = 0;
 
-	keyLabel = (CK_BYTE*)malloc(strlen(label));
-	strncpy(keyLabel, label, strlen(label));
+	keyLabel = (CK_BYTE*)malloc(strlen(label) + 1);
+	strcpy((char*)keyLabel, label);
 
         CK_ATTRIBUTE attrib[] =
         {
@@ -249,8 +249,8 @@ int main(int argc, char **argv[])
 		exit(1);
 	}
 	slotId = atoi((const char*)argv[1]);
-	slotPin = (CK_BYTE*)malloc(strlen((const char*)argv[2]));
-	strncpy(slotPin, (char*)argv[2], strlen((const char*)argv[2]));
+	slotPin = (CK_BYTE*)malloc(strlen((const char*)argv[2]) + 1);
+	strcpy((char*)slotPin, (const char*)argv[2]);
 
 	loadLunaLibrary();
 	connectToLunaSlot();

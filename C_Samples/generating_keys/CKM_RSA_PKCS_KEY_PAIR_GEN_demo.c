@@ -214,8 +214,8 @@ int main(int argc, char **argv[])
 		exit(1);
 	}
 	slotId = atoi((const char*)argv[1]);
-	slotPin = (CK_BYTE*)malloc(strlen((const char*)argv[2]));
-	strncpy(slotPin, (char*)argv[2], strlen((const char*)argv[2]));
+	slotPin = (CK_BYTE*)malloc(strlen((const char*)argv[2]) + 1);
+	strcpy((char*)slotPin, (const char*)argv[2]);
 
 	loadLunaLibrary();
 	connectToLunaSlot();

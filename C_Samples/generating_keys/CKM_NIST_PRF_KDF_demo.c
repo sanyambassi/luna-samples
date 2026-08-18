@@ -213,9 +213,9 @@ void deriveKey()
         CK_ULONG keyLen = 32;
 
 	// Setting label as key-derived-from-<base_key_label>
-	keyLabel = (CK_BYTE*)malloc(17+strlen(baseKeyLabel));
-	strncpy(keyLabel, "key-derived-from-", 17);
-	strncat(keyLabel, baseKeyLabel, strlen(baseKeyLabel));
+	keyLabel = (CK_BYTE*)malloc(17 + strlen((const char*)baseKeyLabel) + 1);
+	strcpy((char*)keyLabel, "key-derived-from-");
+	strcat((char*)keyLabel, (const char*)baseKeyLabel);
 
         CK_ATTRIBUTE attrib[] =
         {
@@ -258,10 +258,10 @@ int main(int argc, char **argv[])
 		exit(1);
 	}
 	slotId = atoi((const char*)argv[1]);
-	slotPin = (CK_BYTE*)malloc(strlen((const char*)argv[2]));
-	strncpy(slotPin, (char*)argv[2], strlen((const char*)argv[2]));
-	baseKeyLabel = (CK_BYTE*)malloc(strlen((const char*)argv[3]));
-	strncpy(baseKeyLabel, (char*)argv[3], strlen((const char*)argv[3]));
+	slotPin = (CK_BYTE*)malloc(strlen((const char*)argv[2]) + 1);
+	strcpy((char*)slotPin, (const char*)argv[2]);
+	baseKeyLabel = (CK_BYTE*)malloc(strlen((const char*)argv[3]) + 1);
+	strcpy((char*)baseKeyLabel, (const char*)argv[3]);
 
 	loadLunaLibrary();
 	connectToLunaSlot();

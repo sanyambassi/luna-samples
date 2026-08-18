@@ -25,7 +25,7 @@ import javax.crypto.*;
 import javax.crypto.KEM.*;
 import javax.crypto.spec.IvParameterSpec;
 
-public class KeyEncapsulationMechanism_MLKEM {
+public class KeyEncapsulation_MLKEM {
 
 	private static LunaSlotManager slotManager = null;
 	private static String slotPassword = null;
@@ -44,11 +44,11 @@ public class KeyEncapsulationMechanism_MLKEM {
 
 	// Prints the correct syntax to execute this sample.
 	private static void printUsage() {
-		System.out.println("[ KeyEncapsulationMechanism_MLKEM ]\n");
+		System.out.println("[ KeyEncapsulation_MLKEM ]\n");
 		System.out.println("Usage-");
-		System.out.println("java KeyEncapsulationMechanism_MLKEM <slot_label> <crypto_officer_password>\n");
+		System.out.println("java KeyEncapsulation_MLKEM <slot_label> <crypto_officer_password>\n");
 		System.out.println("Example -");
-		System.out.println("java KeyEncapsulationMechanism_MLKEM myPartition userpin\n");
+		System.out.println("java KeyEncapsulation_MLKEM myPartition userpin\n");
 	}
 
 

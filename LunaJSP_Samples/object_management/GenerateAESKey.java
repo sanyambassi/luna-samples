@@ -22,7 +22,7 @@ import javax.crypto.KeyGenerator;
 import com.safenetinc.luna.LunaSlotManager;
 import com.safenetinc.luna.exception.*;
 
-public class GeneratingAESKey {
+public class GenerateAESKey {
 	private static LunaSlotManager slotManager = null;
 	private static String slotPassword = null;
 	private static String slotLabel = null;
@@ -33,11 +33,11 @@ public class GeneratingAESKey {
 
 	// Prints the correct syntax to execute this sample.
 	private static void printUsage() {
-		System.out.println(" [ GeneratingAESKey ]\n");
+		System.out.println(" [ GenerateAESKey ]\n");
 		System.out.println("Usage-");
-		System.out.println("java GeneratingAESKey <slot_label> <crypto_officer_password>\n");
+		System.out.println("java GenerateAESKey <slot_label> <crypto_officer_password>\n");
 		System.out.println("Example -");
-		System.out.println("java GeneratingAESKey myPartition userpin\n");
+		System.out.println("java GenerateAESKey myPartition userpin\n");
 	}
 
 

@@ -49,7 +49,10 @@ CK_BYTE *slotPin = NULL; // slot password
 
 CK_OBJECT_HANDLE hDerived = 0;
 const CK_BYTE salt[] = "HelloHolaNamasteySalamKonichiwaNihao"; // Salt value to be used during key generation.
-CK_PKCS5_PBKD2_PARAMS param;
+// PARAMS2 rather than PARAMS: the original v2.20 structure declares
+// ulPasswordLen as CK_ULONG_PTR, which forces the library to dereference the
+// length. PARAMS2 is the corrected layout with a plain CK_ULONG.
+CK_PKCS5_PBKD2_PARAMS2 param;
 const CK_BYTE password[] = "Th3W0rld$M0$+$3cur3P@$$w0rd";
 
 
@@ -155,18 +158,20 @@ void disconnectFromLunaSlot()
 
 
 
-// This function initializes the values for CK_PKCS5_PBKD2_PARAMS structure.
+// This function initializes the values for CK_PKCS5_PBKD2_PARAMS2 structure.
+// The salt and password lengths exclude the trailing NUL of the string
+// literals, so the derived key matches the Node and Java samples.
 void initPBEParam()
 {
         param.saltSource = CKZ_SALT_SPECIFIED;
         param.pSaltSourceData = (CK_VOID_PTR)salt; // Salt
-        param.ulSaltSourceDataLen = sizeof(salt); // Salt len
+        param.ulSaltSourceDataLen = sizeof(salt) - 1; // Salt len
         param.iterations = 1000; // iterations
         param.prf = CKP_PKCS5_PBKD2_HMAC_SHA1; // Pseudo Random Function to use.
         param.pPrfData = NULL; // should be null
         param.ulPrfDataLen = 0; // should be zero
         param.pPassword = (CK_UTF8CHAR_PTR)password; // password to be used
-        param.ulPasswordLen = (CK_ULONG_PTR)sizeof(password); // password len;
+        param.ulPasswordLen = sizeof(password) - 1; // password len;
 }
 
 
@@ -223,8 +228,8 @@ int main(int argc, char **argv[])
 		exit(1);
 	}
 	slotId = atoi((const char*)argv[1]);
-	slotPin = (CK_BYTE*)malloc(strlen((const char*)argv[2]));
-	strncpy(slotPin, (char*)argv[2], strlen((const char*)argv[2]));
+	slotPin = (CK_BYTE*)malloc(strlen((const char*)argv[2]) + 1);
+	strcpy((char*)slotPin, (const char*)argv[2]);
 
 	loadLunaLibrary();
 	connectToLunaSlot();

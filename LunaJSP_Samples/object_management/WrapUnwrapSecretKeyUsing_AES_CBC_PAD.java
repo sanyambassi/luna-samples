@@ -89,7 +89,7 @@ public class WrapUnwrapSecretKeyUsing_AES_CBC_PAD {
 		Cipher unwrap = Cipher.getInstance("AES/CBC/PKCS5Padding", PROVIDER);
 		unwrap.init(Cipher.UNWRAP_MODE, wrappingKey, IVSPEC);
 		unwrappedKey = (SecretKey)unwrap.unwrap(wrappedKey, "AES", Cipher.SECRET_KEY);
-		System.out.println("Wrapped key unwrapped.");
+		System.out.println("Wrapped key unwrapped as a " + unwrappedKey.getAlgorithm() + " key.");
 	}
 
 

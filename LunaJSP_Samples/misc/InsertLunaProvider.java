@@ -19,7 +19,7 @@ import java.security.Provider;
 import java.security.Security;
 import com.safenetinc.luna.provider.LunaProvider;
 
-public class AddRemoveLunaProvider {
+public class InsertLunaProvider {
 
 	private static final int PROVIDER_POSITION = 3;
 	// Display list of all providers.

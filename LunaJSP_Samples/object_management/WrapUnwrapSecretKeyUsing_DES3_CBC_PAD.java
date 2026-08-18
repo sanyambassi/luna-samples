@@ -99,7 +99,7 @@ public class WrapUnwrapSecretKeyUsing_DES3_CBC_PAD {
 		Cipher unwrap = Cipher.getInstance("DESede/CBC/PKCS5Padding", PROVIDER);
 		unwrap.init(Cipher.UNWRAP_MODE, wrappingKey, IVSPEC);
 		unwrappedKey = (SecretKey)unwrap.unwrap(wrappedKey, "AES", Cipher.SECRET_KEY);
-		System.out.println("Wrapped key unwrapped.");
+		System.out.println("Wrapped key unwrapped as a " + unwrappedKey.getAlgorithm() + " key.");
 	}
 
 	public static void main(String args[]) {

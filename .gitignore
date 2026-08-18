@@ -27,6 +27,9 @@ Thumbs.db
 *.swp
 .idea/
 .vscode/
+.project
+.classpath
+.settings/
 
 # Node / npm local noise
 npm-debug.log*
@@ -36,3 +39,17 @@ yarn-error.log*
 # Local compile/output from C/JSP demos — never commit
 C_Samples/**/build/
 LunaJSP_Samples/**/build/
+bin/
+bin_win/
+*.o
+*.obj
+*.exe
+*.pdb
+*.ilk
+*.class
+
+# Files the demos write at runtime: signatures, wrapped keys, SIM blobs
+*.sig
+*.sim
+*.bin
+*-unwrapped
