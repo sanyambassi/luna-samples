@@ -340,17 +340,44 @@ void generateSeedKey()
 // Formats CKA_BIP32_FINGERPRINT, the short identifier SLIP-10 computes from a key's public value.
 // An object handle changes on every run, but a fingerprint depends only on the seed and the path,
 // so it is what shows that two runs really did rebuild the same tree.
+void hexBytes(const CK_BYTE *value, CK_ULONG valueLen, char *out, size_t outLen)
+{
+	CK_ULONG ctr = 0;
+	out[0] = '\0';
+	for(ctr=0; ctr<valueLen && ((ctr*2)+3)<outLen; ctr++)
+		sprintf(out+(ctr*2), "%02x", value[ctr]);
+}
+
 void fingerprintText(CK_SESSION_HANDLE session, CK_OBJECT_HANDLE hKey, char *out, size_t outLen)
 {
 	CK_BYTE fingerprint[16] = {0};
 	CK_ATTRIBUTE attrib[] = {{CKA_BIP32_FINGERPRINT, fingerprint, sizeof(fingerprint)}};
-	CK_ULONG ctr = 0;
 
 	out[0] = '\0';
 	if(p11Func->C_GetAttributeValue(session, hKey, attrib, 1)!=CKR_OK)
 		return;
-	for(ctr=0; ctr<attrib[0].ulValueLen && ((ctr*2)+3)<outLen; ctr++)
-		sprintf(out+(ctr*2), "%02x", fingerprint[ctr]);
+	hexBytes(fingerprint, attrib[0].ulValueLen, out, outLen);
+}
+
+// Immediate parent fingerprint and depth. Parent equals the master only for a
+// depth-1 child. This sample uses a 5-level BIP-44 path, so siblings share a
+// parent fingerprint that is not the master's.
+void lineageText(CK_SESSION_HANDLE session, CK_OBJECT_HANDLE hKey, char *parentOut, size_t parentOutLen, CK_ULONG *depth)
+{
+	CK_BYTE parent[16] = {0};
+	CK_ULONG childDepth = 0;
+	CK_ATTRIBUTE attrib[] =
+	{
+		{CKA_BIP32_PARENT_FINGERPRINT,	parent,		sizeof(parent)},
+		{CKA_BIP32_CHILD_DEPTH,		&childDepth,	sizeof(childDepth)}
+	};
+
+	parentOut[0] = '\0';
+	*depth = 0;
+	if(p11Func->C_GetAttributeValue(session, hKey, attrib, 2)!=CKR_OK)
+		return;
+	hexBytes(parent, attrib[0].ulValueLen, parentOut, parentOutLen);
+	*depth = childDepth;
 }
 
 
@@ -412,6 +439,7 @@ void deriveMasterKeyPair()
 	fingerprintText(hSession, masterKeyPub, fingerprint, sizeof(fingerprint));
 	printf("\n> SLIP-10 master keypair derived on %s.\n", curveName);
 	printf("--> FINGERPRINT : %s\n", fingerprint);
+	printf("--> DEPTH : 0  (a child on this BIP-44 path will name its parent, not this master)\n");
 	printf("--> PUBLIC KEY HANDLE : %lu\n", masterKeyPub);
 	printf("--> PRIVATE KEY HANDLE : %lu\n", masterKeyPri);
 }
@@ -434,8 +462,10 @@ DWORD WINAPI deriveChildKeyPair(LPVOID arg)
 	CK_MECHANISM mech;
 	CK_ULONG path[5];
 	CK_RV rv = CKR_OK;
-	char message[200];
+	char message[240];
 	char fingerprint[40];
+	char parentFp[40];
+	CK_ULONG depth = 0;
 
 	sprintf((char*)keyLabelPub, "SLIP10-child-%d-public", childIndex);
 	sprintf((char*)keyLabelPri, "SLIP10-child-%d-private", childIndex);
@@ -520,8 +550,9 @@ DWORD WINAPI deriveChildKeyPair(LPVOID arg)
 	}
 
 	fingerprintText(session, childParam.hPublicKey, fingerprint, sizeof(fingerprint));
-	sprintf(message, "--> Child %d : derived. FINGERPRINT : %s, PUBLIC KEY HANDLE : %lu, PRIVATE KEY HANDLE : %lu\n",
-		childIndex, fingerprint, childParam.hPublicKey, childParam.hPrivateKey);
+	lineageText(session, childParam.hPublicKey, parentFp, sizeof(parentFp), &depth);
+	sprintf(message, "--> Child %d : derived. DEPTH : %lu, FINGERPRINT : %s, PARENT : %s, PUBLIC KEY HANDLE : %lu, PRIVATE KEY HANDLE : %lu\n",
+		childIndex, depth, fingerprint, parentFp, childParam.hPublicKey, childParam.hPrivateKey);
 	lockedPrint(message);
 	p11Func->C_CloseSession(session);
 #ifdef OS_UNIX

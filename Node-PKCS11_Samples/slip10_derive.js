@@ -75,6 +75,8 @@ const CKA_DERIVE = 0x0000010c;
 const CKA_VERIFY = 0x0000010a;
 const CKA_SIGN = 0x00000108;
 const CKA_BIP32_FINGERPRINT = 0x80001105;
+const CKA_BIP32_PARENT_FINGERPRINT = 0x80001106;
+const CKA_BIP32_CHILD_DEPTH = 0x80001103;
 
 // Luna cryptoki packs structs to 1 byte with a 32-bit CK_ULONG on Windows, and
 // uses natural alignment with a 64-bit CK_ULONG elsewhere.
@@ -198,9 +200,9 @@ function getDeriveKey(libPath) {
  * Object handles change on every run; a fingerprint depends only on the seed and the path,
  * so it is what shows that two runs rebuilt the same tree.
  */
-function fingerprintText(libPath, sessionHandle, keyHandle) {
+function attrHex(libPath, sessionHandle, keyHandle, type) {
   const value = Buffer.alloc(16);
-  const tpl = buildTemplate([[CKA_BIP32_FINGERPRINT, value]]);
+  const tpl = buildTemplate([[type, value]]);
   const rv = getBinding(libPath).C_GetAttributeValue(
     sessionHandle,
     keyHandle,
@@ -210,6 +212,27 @@ function fingerprintText(libPath, sessionHandle, keyHandle) {
   if (rv !== 0) return "";
   const out = koffi.decode(tpl.buf, CK_ATTRIBUTE);
   return value.subarray(0, Number(out.ulValueLen)).toString("hex");
+}
+
+function fingerprintText(libPath, sessionHandle, keyHandle) {
+  return attrHex(libPath, sessionHandle, keyHandle, CKA_BIP32_FINGERPRINT);
+}
+
+function parentFingerprintText(libPath, sessionHandle, keyHandle) {
+  return attrHex(libPath, sessionHandle, keyHandle, CKA_BIP32_PARENT_FINGERPRINT);
+}
+
+function childDepth(libPath, sessionHandle, keyHandle) {
+  const value = Buffer.alloc(CK_ULONG_SIZE);
+  const tpl = buildTemplate([[CKA_BIP32_CHILD_DEPTH, value]]);
+  const rv = getBinding(libPath).C_GetAttributeValue(
+    sessionHandle,
+    keyHandle,
+    tpl.buf,
+    1
+  );
+  if (rv !== 0) return -1;
+  return CK_ULONG_SIZE === 4 ? value.readUInt32LE(0) : Number(value.readBigUInt64LE(0));
 }
 
 function packMechanism(mechType, paramBuf) {
@@ -450,12 +473,22 @@ if (!isMainThread) {
         masterPrivate,
         index
       );
-      const fingerprint = fingerprintText(
+      const sessionHandle = handleToNumber(session.handle);
+      const fingerprint = fingerprintText(p11Lib, sessionHandle, child.publicKey);
+      const parentFp = parentFingerprintText(
         p11Lib,
-        handleToNumber(session.handle),
+        sessionHandle,
         child.publicKey
       );
-      parentPort.postMessage({ ok: true, index, fingerprint, ...child });
+      const depth = childDepth(p11Lib, sessionHandle, child.publicKey);
+      parentPort.postMessage({
+        ok: true,
+        index,
+        fingerprint,
+        parentFp,
+        depth,
+        ...child,
+      });
     } finally {
       session.close();
     }
@@ -583,7 +616,7 @@ if (!isMainThread) {
       for (const r of results) {
         if (r.ok) {
           console.log(
-            `  --> Child[${r.index}] derived  fingerprint=${r.fingerprint} priv=${r.privateKey} pub=${r.publicKey}`
+            `  --> Child[${r.index}] derived  depth=${r.depth} fingerprint=${r.fingerprint} parent=${r.parentFp} priv=${r.privateKey} pub=${r.publicKey}`
           );
         } else {
           failed++;
